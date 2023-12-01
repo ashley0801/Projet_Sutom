@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion de Profil{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #333; /* Dark background for the whole page */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Wrapper styles */
+.wrapper {
+    display: flex; /* Display sidebar and content next to each other */
+    align-items: flex-start; /* Align the top of the sidebar and content */
+    background-color: #FFF; /* White background around the wrapper */
+    padding: 20px; /* Space around the outside of the wrapper */
+    border-radius: 10px; /* Rounded corners on the wrapper */
+}
+
+/* Sidebar styles */
+.sidebar {
+    display: flex; /* Stack icons vertically */
+    flex-direction: column;
+    justify-content: center; /* Center icons vertically */
+    background-color: #222; /* Darker grey for the sidebar */
+    padding: 20px;
+    border-radius: 10px 0 0 10px; /* Rounded corners on the left side of the sidebar */
+}
+
+.sidebar a {
+    color: #ddd;
+    margin: 10px 0; /* Space between icons */
+    text-align: center;
+    font-size: 22px;
+}
+
+.sidebar a:hover {
+    color: #fff;
+}
+
+/* Content styles */
+.main-content {
+    flex-grow: 1; /* Take up the remaining space */
+    background-color: #4f4f4f; /* Lighter grey for the content area */
+    padding: 40px; /* Space inside the rectangle */
+    border-radius: 0 10px 10px 0; /* Rounded corners on the right side of the content */
+}
+
+/* Profile styles */
+.profile-info {
+    text-align: left; /* Align text to the left inside the main content */
+}
+
+.profile-action {
+    margin-top: 20px; /* Space above the action buttons */
+    display: block; /* Full-width buttons */
+    width: 100%;
+    padding: 10px;
+    background: #555;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center; /* Center the text in the buttons */
+}
+
+.profile-action:not(:last-child) {
+    margin-bottom: 10px; /* Space between buttons */
+}
+
+    .avatar {
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+    <div class="sidebar">
+        <a href="{{ path('gestion_profil') }}">👤</a>
+        <a href="{{ path('app_friends') }}">👥</a>
+        <a href="{{ path('app_add_friend') }}">➕</a>
+        <a href="{{ path('app_pending_friend_requests') }}">👥?</a>
+    </div>
+    <div class="main-content">
+        <h1>Gestion de Profil</h1>
+        {% if user %}
+            <div class="profile-info">
+                {% if user.avatar %}
+                    <img src="{{ asset('images/avatars/' ~ user.avatar) }}" alt="Avatar de l'utilisateur" class="avatar">
+                {% else %}
+                    <img src="{{ asset('images/default-avatar.png') }}" alt="Avatar par défaut" class="avatar">
+                {% endif %}
+                <p>Nom d'utilisateur : {{ user.username }}</p>
+                <p>Description : {{ user.description }}</p>
+                <p>Âge : {{ user.age }}</p>
+            </div>
+             <div>
+                <button class="profile-action" onclick="location.href='{{ path('modification_profil') }}'">
+                    <i class="fa fa-edit"></i> Modifier
+                </button>
+                <button class="profile-action" onclick="if (confirm('Voulez-vous vraiment supprimer votre compte ?')) { location.href='{{ path('delete_account') }}'; }">
+                    <i class="fa fa-trash"></i> Supprimer
+                </button>
+            </div>
+        {% else %}
+            <p>Aucun utilisateur connecté.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification du Profil{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+     /* Styles repris de la page de gestion de profil */
+    body {
+        background-color: #333;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+
+   /* Basic styles */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #333; /* Dark background for the whole page */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Wrapper styles */
+.wrapper {
+    display: flex; /* Display sidebar and content next to each other */
+    background-color: #FFF; /* White background around the wrapper */
+    padding: 20px; /* Space around the outside of the wrapper */
+    border-radius: 10px; /* Rounded corners on the wrapper */
+}
+
+/* Sidebar styles */
+.sidebar {
+    display: flex; /* Stack icons vertically */
+    flex-direction: column;
+    background-color: #222; /* Darker grey for the sidebar */
+    padding: 20px;
+    border-radius: 10px 0 0 10px; /* Rounded corners on the left side of the sidebar */
+}
+
+.sidebar a {
+    color: #ddd;
+    margin: 10px 0; /* Space between icons */
+    text-align: center;
+    font-size: 22px;
+}
+
+.sidebar a:hover {
+    color: #fff;
+}
+
+/* Content styles */
+.main-content {
+    flex-grow: 1; /* Take up the remaining space */
+    background-color: #4f4f4f; /* Lighter grey for the content area */
+    padding: 40px; /* Space inside the rectangle */
+    border-radius: 0 10px 10px 0; /* Rounded corners on the right side of the content */
+    width: 50%; /* Adjust width as necessary */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Profile styles */
+.profile-info {
+    text-align: left; /* Align text to the left inside the main content */
+}
+
+.profile-action {
+    margin-top: 20px; /* Space above the action buttons */
+    display: block; /* Full-width buttons */
+    width: 100%;
+    padding: 10px;
+    background: #555;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center; /* Center the text in the buttons */
+}
+
+.profile-action:not(:last-child) {
+    margin-bottom: 10px; /* Space between buttons */
+}
+
+    /* Styles pour la form */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: .5rem;
+        color: #ccc;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    textarea,
+    input[type="number"] {
+        width: 100%; /* Pleine largeur */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+
+    button[type="submit"] {
+        color: white;
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: .375rem .75rem;
+        border-radius: .25rem;
+        font-size: 1rem;
+        line-height: 1.5;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .avatar-options label {
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    .avatar-thumbnail {
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 1px solid #ddd;
+        border-radius: 50%;
+        margin-bottom: 5px;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="main-content">
+    <h1>Modification du Profil</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.username) }}
+    <div class="form-group">
+        {{ form_label(form.avatar) }}
+        <div class="avatar-options">
+            {% for avatar_label, avatar_value in form.avatar.vars.choices %}
+                <label>
+                    <input type="radio" id="{{ form.avatar.vars.id }}_{{ loop.index0 }}" name="{{ form.avatar.vars.full_name }}" value="{{ avatar_value.value }}" {% if form.avatar.vars.value == avatar_value.value %}checked="checked"{% endif %}>
+                    <img src="{{ asset('images/avatars/' ~ avatar_value.value) }}" alt="{{ avatar_label }}" class="avatar-thumbnail">
+                    {{ avatar_label }}
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+    {{ form_row(form.description) }}
+    {{ form_row(form.age) }}
+    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
+

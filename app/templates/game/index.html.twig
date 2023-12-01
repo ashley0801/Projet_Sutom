@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devinez le mot{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #333;
+        color: white;
+        text-align: center;
+    }
+
+    h1 {
+        color: #EEE;
+        margin-top: 50px;
+    }
+
+    #game-board {
+        margin-bottom: 20px;
+        display: inline-block;
+        background-color: #555;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .attempt {
+        margin-bottom: 5px;
+    }
+
+    .letter {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border: 2px solid #777;
+        text-align: center;
+        margin-right: 5px;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        /* Colors are based on the classes .red, .yellow, .green, .empty */
+    }
+
+    .letter.red {
+        background-color: red;
+    }
+
+    .letter.yellow {
+        background-color: yellow;
+        color: black; /* Pour assurer la lisibilité du texte sur fond jaune */
+    }
+
+    .letter.green {
+        background-color: green;
+    }
+
+    .empty {
+        background-color: #333; /* Same as body background for an "empty" effect */
+    }
+
+    input[type=text] {
+        padding: 5px;
+        margin-top: 20px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1E90FF;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #5599FF;
+    }
+
+    .info {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1>Devinez le mot pour {{ date }}</h1>
+
+{% if not word %}
+    <p class="info">Il n'y a pas de mot du jour pour cette date.</p>
+{% else %}
+    <div id="game-board">
+        {% set totalAttempts = 8 %}
+        {% set attemptsMade = gameState.getAttempts|length %}
+        {% set emptyAttempts = totalAttempts - attemptsMade %}
+
+        {# Affichage des tentatives effectuées #}
+        {% for attempt in gameState.getAttempts %}
+            <div class="attempt">
+                {% for letter in attempt.guess|split('') %}
+                    {% set hintColor = attempt.hints[loop.index0] %}
+                    <span class="letter {{ hintColor }}">{{ letter }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        {# Affichage des tentatives vides s'il y en a #}
+        {% for i in 1..emptyAttempts %}
+            <div class="attempt">
+                {% for j in 1..word|length %}
+                    <span class="letter empty">&nbsp;</span> {# Espace insécable pour les lettres vides #}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Formulaire de saisie des tentatives #}
+    {% if gameState.getRemainingTries > 0 and not gameState.getHasWon %}
+        <form method="post" id="guess-form">
+            <input type="text" id="guess" name="guess" maxlength="{{ word|length }}" required>
+            <button type="submit">Soumettre</button>
+        </form>
+    {% endif %}
+
+  
+{% endif %}
+<script>
+    document.getElementById('guess-form').addEventListener('submit', function(event) {
+        var guessInput = document.getElementById('guess');
+        var guessValue = guessInput.value.trim().toUpperCase(); // Trim and convert to uppercase for consistency
+
+        // Ensure the guess is only letters and has the correct length
+        var validGuess = /^[A-Za-z]+$/.test(guessValue) && guessValue.length === {{ word|length }};
+
+        if (!validGuess) {
+            event.preventDefault(); // Prevent form submission
+            alert('Votre devinette doit contenir uniquement des lettres et avoir la même longueur que le mot à deviner.');
+            guessInput.focus(); // Refocus on the input element
+        }
+    });
+</script>
+{% endblock %}

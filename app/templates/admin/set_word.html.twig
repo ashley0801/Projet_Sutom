@@ -1,0 +1,13 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Définir le mot du jour</h1>
+
+    {{ form_start(form) }}
+    {{ form_end(form) }}
+
+
+    {# Bouton de déconnexion #}
+    <a href="{{ path('app_login') }}">Déconnexion</a>
+    {% endblock %}

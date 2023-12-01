@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .login-container {
+        max-width: 300px;
+        margin: 50px auto;
+        background: #333;
+        padding: 20px;
+        color: #fff;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .login-container h1 {
+        margin-bottom: 20px;
+    }
+
+    .login-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .login-form .form-group input,
+    .login-form .form-group label {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-top: 5px;
+    }
+
+    .login-button {
+        width: 100%;
+        padding: 10px;
+        background: #555;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+
+    .login-button:hover {
+        background: #666;
+    }
+
+    /* Styles pour les vignettes d'avatar */
+    .avatar-options {
+        display: flex; /* Cela alignera les vignettes d'avatar côte à côte */
+        justify-content: center; /* Centrer les vignettes si nécessaire */
+        gap: 10px; /* Ajoute un peu d'espace entre les vignettes */
+    }
+
+    .avatar-thumbnail {
+        border-radius: 50%;
+        width: 50px; /* Taille de la vignette */
+        height: 50px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <h1>Register</h1>
+    {{ form_start(registrationForm, {'attr': {'class': 'login-form'}}) }}
+        {{ form_row(registrationForm.username, {'attr': {'placeholder': 'Username'}}) }}
+        {{ form_row(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+        <div class="form-group">
+            {{ form_label(registrationForm.avatar) }}
+            <div class="avatar-options">
+                {% for avatar_label, avatar_value in registrationForm.avatar.vars.choices %}
+                    <label>
+                        <input type="radio" name="{{ registrationForm.avatar.vars.full_name }}" value="{{ avatar_value.value }}">
+                        <img src="{{ asset('images/avatars/' ~ avatar_value.value) }}" alt="{{ avatar_label }}" class="avatar-thumbnail">
+                        {{ avatar_label }}
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+        {{ form_row(registrationForm.description, {'attr': {'placeholder': 'Describe yourself...'}}) }}
+        {{ form_row(registrationForm.age, {'attr': {'placeholder': 'Age'}}) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+        <button type="submit" class="login-button">Register</button>
+    {{ form_end(registrationForm) }}
+</div>
+{% endblock %}
